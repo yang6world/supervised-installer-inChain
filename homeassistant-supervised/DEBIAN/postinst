@@ -8,7 +8,7 @@ ARCH=$(uname -m)
 
 BINARY_DOCKER=/usr/bin/docker
 
-DOCKER_REPO="ghcr.io/home-assistant"
+DOCKER_REPO="homeassistant"
 
 SERVICE_DOCKER="docker.service"
 SERVICE_NM="NetworkManager.service"
@@ -104,9 +104,9 @@ case ${ARCH} in
         error "${ARCH} unknown!"
     ;;
 esac
-PREFIX=${PREFIX:-/usr}
+PREFIX=${PREFIX:-/root}
 SYSCONFDIR=${SYSCONFDIR:-/etc}
-DATA_SHARE=${DATA_SHARE:-$PREFIX/share/hassio}
+DATA_SHARE=${DATA_SHARE:-$PREFIX/hassio}
 CONFIG="${SYSCONFDIR}/hassio.json"
 cat > "${CONFIG}" <<- EOF
 {
