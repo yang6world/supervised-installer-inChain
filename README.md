@@ -10,6 +10,15 @@
 
 这种方法被认为是高级的，只有在熟悉管理 Linux 操作系统、Docker 和网络方面的专家才应使用。
 
+本项目的目的是让在中国的homeassistant玩家更好的，不用在使用代理的情况下更快的完成安装（本项目还在更新中，可能还不能很好的投入使用）
+
+## 计划
+ - [√]修改supervisor容器的安装地址
+ - [√]将网络检查地址改为百度
+ - [×]使非Debian发行版安装如Ubuntu（不建议）
+ - [×]汉化
+ - [×]修改
+
 ## 安装
 
 以 root 身份运行以下命令（对于已安装 sudo 的机器，使用 `su -` 或 `sudo su -`）：
@@ -42,9 +51,16 @@ curl -fsSL get.docker.com | sh
 有关安装 OS-Agent 的说明可以在[此处找到](https://github.com/home-assistant/os-agent/tree/main#using-home-assistant-supervised-on-debian)
 
 步骤4：安装 Home Assistant Supervised Debian 包：
+```bash
+git clone https://github.com/yang6world/supervised-installer-inChain.git
+cd supervised-installer-inChain
+```
 
 ```bash
-wget https://github.com/home-assistant/supervised-installer/releases/latest/download/homeassistant-supervised.deb
+docker run --rm -v $(pwd):/tmp debian:bullseye-slim bash -c  "cd /tmp && chmod 555 homeassistant-supervised/DEBIAN/p* && dpkg-deb --build --root-owner-group homeassistant-supervised"
+```
+
+```bash
 apt install ./homeassistant-supervised.deb
 ```
 
@@ -70,7 +86,7 @@ apt install ./homeassistant-supervised.deb
 
 ## 配置
 
-我们的 `$DATA_SHARE` 的默认路径是 `/usr/share/hassio`。
+我们的 `$DATA_SHARE` 的默认路径是 `/root/hassio`。
 此路径用于存储与 Home Assistant 相关的所有内容。
 
 您可以在安装过程中重新配置此路径，使用以下命令：
