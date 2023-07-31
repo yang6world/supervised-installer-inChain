@@ -104,8 +104,6 @@ case ${ARCH} in
         error "${ARCH} 未知!"
     ;;
 esac
-supported_os=("Debian GNU/Linux 11 (bullseye)" "Debian GNU/Linux 12 (bookworm)" "Armbian 23.08.0-trunk bookworm")
-armbian_os=("Armbian 23.08.0-trunk bookworm")
 PREFIX=${PREFIX:-/usr}
 SYSCONFDIR=${SYSCONFDIR:-/etc}
 DATA_SHARE=${DATA_SHARE:-/home/hassio}
@@ -181,20 +179,3 @@ then
     sleep 30
     sudo reboot
 fi
-
-for os in "${armbian_os[@]}"; do
-    if [[ $os == "$CURRENT_OS" ]]; then
-        warn "正在对uEnv进行操作"
-        warn "正在备份原有的uEvn"
-        cp /boot/uEnv.txt /boot/uEnv.bak
-        echo "apparmor=1 security=apparmor systemd.unified_cgroup_hierarchy=false" >> /boot/uEnv.txt
-        sed '4{N;s/\n/ /;}' /boot/uEnv.txt > /boot/temp && mv /boot/temp /boot/uEnv.txt
-        warn "正在对os-release进行操作"
-        sed -i '1d' /etc/os-release
-        sed -i '1 i\PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"' /etc/os-release
-        warn "系统将在30s后重新启动"
-        sleep 30
-        reboot
-        break
-    fi
-done
