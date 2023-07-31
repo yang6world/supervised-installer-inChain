@@ -5,6 +5,7 @@ function warn  { echo -e "\e[33m[warn] $*\e[39m"; }
 function error { echo -e "\e[31m[error] $*\e[39m"; exit 1; }
 
 warn ""
+warn "该版本为非官方版本，由ha爱好者维护，如遇到不适配等问题可移步到官方版"
 warn "如果你想对自己的系统有更多的控制,请运行"
 warn "Home Assistant作为虚拟机或运行Home Assistant Core"
 warn "通过Docker容器运行"
@@ -40,6 +41,7 @@ for os in "${armbian_os[@]}"; do
         cp /boot/uEnv.txt /boot/uEnv.bak
         sed -i '$d' /boot/uEnv.txt
         echo "APPEND=root=UUID=72bbe4f4-d298-43f8-a0e4-8b0709b2a873 rootflags=data=writeback rw rootfstype=ext4 console=ttyAML0,115200n8 console=tty0 no_console_suspend consoleblank=0 fsck.fix=yes fsck.repair=yes net.ifnames=0 max_loop=128 cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory swapaccount=1 apparmor=1 security=apparmor systemd.unified_cgroup_hierarchy=false" >> /boot/uEnv.txt
+        warn "正在对os-release进行操作"
         break
     fi
 done
