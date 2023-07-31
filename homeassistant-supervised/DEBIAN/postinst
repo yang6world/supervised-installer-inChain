@@ -166,9 +166,6 @@ then
         sed -i.bak 's/$/ systemd.unified_cgroup_hierarchy=false/' /boot/firmware/cmdline.txt
         touch /var/run/reboot-required
     fi
-elif [ -f /boot/uEnv.txt]
-then
-    sleep 1
 else
     warn "无法找到 /etc/default/grub 或 /boot/firmware/cmdline.txt，无法切换到 cgroup v1"
 fi
