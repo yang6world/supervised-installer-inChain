@@ -39,8 +39,8 @@ for os in "${armbian_os[@]}"; do
         warn "正在对uEnv进行操作"
         warn "正在备份原有的uEvn"
         cp /boot/uEnv.txt /boot/uEnv.bak
-        sed -i '$d' /boot/uEnv.txt
-        echo "APPEND=root=UUID=72bbe4f4-d298-43f8-a0e4-8b0709b2a873 rootflags=data=writeback rw rootfstype=ext4 console=ttyAML0,115200n8 console=tty0 no_console_suspend consoleblank=0 fsck.fix=yes fsck.repair=yes net.ifnames=0 max_loop=128 cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory swapaccount=1 apparmor=1 security=apparmor systemd.unified_cgroup_hierarchy=false" >> /boot/uEnv.txt
+        echo "apparmor=1 security=apparmor systemd.unified_cgroup_hierarchy=false" >> /boot/uEnv.txt
+        sed '4{N;s/\n/ /;}' /boot/uEnv.txt > /boot/temp && mv /boot/temp /boot/uEnv.txt
         warn "正在对os-release进行操作"
         sed -i '1d' /etc/os-release
         sed -i '1 i\PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"' /etc/os-release
