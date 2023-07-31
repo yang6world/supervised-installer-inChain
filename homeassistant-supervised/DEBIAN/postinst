@@ -104,9 +104,9 @@ case ${ARCH} in
         error "${ARCH} unknown!"
     ;;
 esac
-PREFIX=${PREFIX:-/root}
+PREFIX=${PREFIX:-/usr}
 SYSCONFDIR=${SYSCONFDIR:-/etc}
-DATA_SHARE=${DATA_SHARE:-$PREFIX/hassio}
+DATA_SHARE=${DATA_SHARE:-/home/hassio}
 CONFIG="${SYSCONFDIR}/hassio.json"
 cat > "${CONFIG}" <<- EOF
 {
