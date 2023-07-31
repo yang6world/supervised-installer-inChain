@@ -175,4 +175,7 @@ info "机器的 IP 地址为: http://${IP_ADDRESS}:8123"
 if [ -f /var/run/reboot-required ]
 then
     warn "需要重新启动系统以应用对 grub 的更改"
+    warn "系统将在30s后重启，若未重启请手动重启"
+    sleep 30
+    sudo reboot
 fi
