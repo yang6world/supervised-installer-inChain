@@ -13,7 +13,7 @@ warn ""
 # Check if we are running on a supported OS
 BYPASS_OS_CHECK=${BYPASS_OS_CHECK:-false}
 supported_os=("Debian GNU/Linux 11 (bullseye)" "Debian GNU/Linux 12 (bookworm)")
-
+armbian_os=("Armbian")
 CURRENT_OS=$(lsb_release -d | awk -F"\t" '{print $2}')
 os_supported=false
 
@@ -26,12 +26,23 @@ done
 
 if [[ $os_supported == false ]]; then
     if [[ $BYPASS_OS_CHECK != "true" ]]; then
-        error "${CURRENT_OS} is not supported!"
+        error "${CURRENT_OS} 不受支持!"
     fi
     warn "操作系统检查…"
     warn "${CURRENT_OS} 是不受支持的!"
     warn "请不要报告与此操作系统相关的问题！"
 fi
+
+for os in "${armbian_os[@]}"; do
+    if [[ $os == "$CURRENT_OS" ]]; then
+        warn "正在对uEnv进行操作"
+        warn "正在备份原有的uEvn"
+        cp /boot/uEnv.txt /boot/uEnv.bak
+        sed -i '$d' /boot/uEnv.txt
+        echo "APPEND=root=UUID=72bbe4f4-d298-43f8-a0e4-8b0709b2a873 rootflags=data=writeback rw rootfstype=ext4 console=ttyAML0,115200n8 console=tty0 no_console_suspend consoleblank=0 fsck.fix=yes fsck.repair=yes net.ifnames=0 max_loop=128 cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory swapaccount=1 apparmor=1 security=apparmor systemd.unified_cgroup_hierarchy=false" >> /boot/uEnv.txt
+        break
+    fi
+done
 
 # Check if we are running on a supported architecture
 ARCH=$(uname -m)
