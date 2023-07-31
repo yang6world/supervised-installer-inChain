@@ -64,7 +64,7 @@ docker run --rm -v $(pwd):/tmp debian:bullseye-slim bash -c  "cd /tmp && chmod 5
 ```bash
 sudo dpkg -i homeassistant-supervised.deb
 ```
-
+或
 ```bash
 sudo apt install ./homeassistant-supervised.deb
 ```
