@@ -167,7 +167,7 @@ then
         touch /var/run/reboot-required
     fi
 else
-    warn "无法找到 /etc/default/grub 或 /boot/firmware/cmdline.txt，无法切换到 cgroup v1"
+    warn "无法找到 /etc/default/grub 或 /boot/firmware/cmdline.txt，无法切换到 cgroup v1（若系统为Armbian可忽略）"
 fi
 info "在几分钟内，您将能够访问 Home Assistant，网址为："
 info "http://homeassistant.local:8123 或使用您的 IP 地址"
