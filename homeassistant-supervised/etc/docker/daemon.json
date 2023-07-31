@@ -3,6 +3,13 @@
     "storage-driver": "overlay2",
     "ip6tables": true,
     "experimental": true,
+    "registry-mirrors": [
+        "https://419bd6w5.mirror.aliyuncs.com",
+        "https://registry.docker-cn.com",
+        "http://hub-mirror.c.163.com",
+        "https://docker.mirrors.ustc.edu.cn",
+        "https://registry.hub.docker.com"
+        ],
     "log-opts": {
         "tag": "{{.Name}}"
     }
