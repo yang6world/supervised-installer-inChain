@@ -44,8 +44,7 @@ for os in "${armbian_os[@]}"; do
         warn "正在对os-release进行操作"
         sed -i '1d' /etc/os-release
         sed -i '1 i\PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"' /etc/os-release
-        warn "系统将在30s后重新启动"
-        sleep 30
+        warn "准备工作完成，请在安装完成后重启"
         reboot
         break
     fi
