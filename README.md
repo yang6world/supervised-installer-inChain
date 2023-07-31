@@ -86,7 +86,7 @@ apt install ./homeassistant-supervised.deb
 
 ## 配置
 
-我们的 `$DATA_SHARE` 的默认路径是 `/root/hassio`。
+我们的 `$DATA_SHARE` 的默认路径是 `/home/hassio`。
 此路径用于存储与 Home Assistant 相关的所有内容。
 
 您可以在安装过程中重新配置此路径，使用以下命令：
