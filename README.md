@@ -62,7 +62,11 @@ docker run --rm -v $(pwd):/tmp debian:bullseye-slim bash -c  "cd /tmp && chmod 5
 ```
 
 ```bash
-apt install ./homeassistant-supervised.deb
+sudo dpkg -i homeassistant-supervised.deb
+```
+
+```bash
+sudo apt install ./homeassistant-supervised.deb
 ```
 
 ## 支持的机器类型
