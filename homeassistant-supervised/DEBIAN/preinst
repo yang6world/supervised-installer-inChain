@@ -5,9 +5,9 @@ function warn  { echo -e "\e[33m[warn] $*\e[39m"; }
 function error { echo -e "\e[31m[error] $*\e[39m"; exit 1; }
 
 warn ""
-warn "If you want more control over your own system, run"
-warn "Home Assistant as a VM or run Home Assistant Core"
-warn "via a Docker container."
+warn "如果你想对自己的系统有更多的控制,请运行"
+warn "Home Assistant作为虚拟机或运行Home Assistant Core"
+warn "通过Docker容器运行"
 warn ""
 
 # Check if we are running on a supported OS
@@ -28,20 +28,20 @@ if [[ $os_supported == false ]]; then
     if [[ $BYPASS_OS_CHECK != "true" ]]; then
         error "${CURRENT_OS} is not supported!"
     fi
-    warn "Bypassing OS check..."
-    warn "${CURRENT_OS} is not supported!"
-    warn "Please DO NOT report issues regarding this OS!"
+    warn "操作系统检查…"
+    warn "${CURRENT_OS} 是不受支持的!"
+    warn "请不要报告与此操作系统相关的问题！"
 fi
 
 # Check if we are running on a supported architecture
 ARCH=$(uname -m)
 if [[ ! "i386|i686|x86_64|arm|armv6l|armv7l|aarch64" == *"$ARCH"* ]]; then
-    error "${ARCH} is not supported!"
+    error "${ARCH} 不支持!"
 fi
 
 # Check if Modem Manager is enabled
 if systemctl is-enabled ModemManager.service &> /dev/null; then
-    warn "ModemManager service is enabled. This might cause issue when using serial devices."
+    warn "ModemManager 服务已启用。这可能会在使用串口设备时引发问题"
 fi
 
 # Check dmesg access

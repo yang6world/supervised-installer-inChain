@@ -22,7 +22,7 @@ SUPERVISOR_CONTAINER_ID=$(docker inspect --format='{{.Image}}' hassio_supervisor
 # Container image or container is somehow corrupted.
 # Delete the container, delete the image, pull a fresh one
 if [ -f "${SUPERVISOR_STARTUP_MARKER}" ]; then
-    echo "[WARNING] Supervisor container did not remove the startup marker file. Assuming container image or container corruption."
+    echo "[警告] Supervisor 容器未删除启动标记文件。可能容器镜像或容器已损坏。"
     docker container rm --force hassio_supervisor || true
     SUPERVISOR_CONTAINER_ID=""
     # Make sure we delete all supervisor images
@@ -40,7 +40,7 @@ if [ -z "${SUPERVISOR_IMAGE_ID}" ]; then
     # broken, this creates a way (e.g., bad release).
     SUPERVISOR_VERSION=$(jq -r '.supervisor // "latest"' "${SUPERVISOR_DATA}/updater.json" || echo "latest")
 
-    echo "[WARNING] Supervisor image missing, downloading a fresh one: ${SUPERVISOR_VERSION}"
+    echo "[警告] 找不到 Supervisor 镜像，正在下载最新的镜像： ${SUPERVISOR_VERSION}"
 
     # Pull in the Supervisor
     if docker pull "${SUPERVISOR_IMAGE}:${SUPERVISOR_VERSION}"; then
@@ -50,7 +50,7 @@ if [ -z "${SUPERVISOR_IMAGE_ID}" ]; then
         fi
     else
         # Pull failed, updater info might be corrupted, re-trying with latest
-        echo "[WARNING] Supervisor downloading failed trying: latest"
+        echo "[警告] Supervisor 下载失败，正在尝试下载最新版本：latest"
         docker pull "${SUPERVISOR_IMAGE}:latest"
     fi
 
@@ -60,7 +60,7 @@ fi
 if [ -n "${SUPERVISOR_CONTAINER_ID}" ]; then
     # Image changed, remove previous container
     if [ "${SUPERVISOR_IMAGE_ID}" != "${SUPERVISOR_CONTAINER_ID}" ]; then
-        echo "[INFO] Supervisor image has been updated, destroying previous container..."
+        echo "[INFO] Supervisor 镜像已更新，正在销毁之前的容器…"
         docker container rm --force hassio_supervisor || true
         SUPERVISOR_CONTAINER_ID=""
     fi
@@ -68,7 +68,7 @@ if [ -n "${SUPERVISOR_CONTAINER_ID}" ]; then
     # Start script changed, remove previous container
     # shellcheck disable=SC3013
     if [ ! -f "${SUPERVISOR_STARTSCRIPT_VERSION}" ] || [ "${SUPERVISOR_STARTSCRIPT_VERSION}" -nt "$0" ] || [ "${SUPERVISOR_STARTSCRIPT_VERSION}" -ot "$0" ]; then
-        echo "[INFO] Supervisor start script has changed, destroying previous container..."
+        echo "[INFO] Supervisor 的启动脚本已更改，正在销毁之前的容器…"
         docker container rm --force hassio_supervisor || true
         SUPERVISOR_CONTAINER_ID=""
     fi
@@ -76,7 +76,7 @@ fi
 
 # If Supervisor container is missing, create it
 if [ -z "${SUPERVISOR_CONTAINER_ID}" ]; then
-    echo "[INFO] Creating a new Supervisor container..."
+    echo "[INFO] 正在创建一个新的 Supervisor 容器…"
     # shellcheck disable=SC2086
     docker container create \
         --name hassio_supervisor \
@@ -100,6 +100,6 @@ fi
 
 # Run supervisor
 mkdir -p ${SUPERVISOR_DATA}
-echo "[INFO] Starting the Supervisor..."
+echo "[INFO] 启动 Supervisor…"
 docker container start hassio_supervisor
 exec docker container wait hassio_supervisor

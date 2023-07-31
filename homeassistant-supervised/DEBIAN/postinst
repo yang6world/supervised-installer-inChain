@@ -21,19 +21,19 @@ URL_APPARMOR_PROFILE="https://version.home-assistant.io/apparmor.txt"
 
 
 # Restart NetworkManager
-info "Restarting NetworkManager"
+info "正在重启 NetworkManager"
 systemctl restart "${SERVICE_NM}"
 
 # Enable and start systemd-resolved
 if [ "$(systemctl is-active systemd-resolved)" = 'inactive' ]; then
-    info "Enable systemd-resolved"
+    info "启用 systemd-resolved"
     systemctl enable systemd-resolved.service> /dev/null 2>&1;
     systemctl start systemd-resolved.service> /dev/null 2>&1;
 fi
 
 # Check and fix systemd-journal-gatewayd socket location
 if [ ! -S "/run/systemd-journal-gatewayd.sock" ]; then
-    info "Set up systemd-journal-gatewayd socket file"
+    info "设置 systemd-journal-gatewayd socket文件"
     if [ "$(systemctl is-active systemd-journal-gatewayd.socket)" = 'active' ]; then
         systemctl stop systemd-journal-gatewayd.socket> /dev/null 2>&1;
     fi
@@ -41,18 +41,18 @@ if [ ! -S "/run/systemd-journal-gatewayd.sock" ]; then
 fi
 # Enable and start systemd-journal-gatewayd
 if [ "$(systemctl is-active systemd-journal-gatewayd.socket)" = 'inactive' ]; then
-    info "Enable systemd-journal-gatewayd"
+    info "启用 systemd-journal-gatewayd"
     systemctl enable systemd-journal-gatewayd.socket> /dev/null 2>&1;
     systemctl start systemd-journal-gatewayd.socket> /dev/null 2>&1;
 fi
 
 # Restart Docker service
-info "Restarting docker service"
+info "重启docker服务"
 systemctl restart "${SERVICE_DOCKER}"
 
 # Check network connection
 while ! ping -c 1 -W 1 ${URL_CHECK_ONLINE}; do
-    info "Waiting for ${URL_CHECK_ONLINE} - network interface might be down..."
+    info "无法Ping通 ${URL_CHECK_ONLINE} - 网络接口可能已关闭…"
     sleep 2
 done
 
@@ -101,7 +101,7 @@ case ${ARCH} in
         HASSIO_DOCKER="${DOCKER_REPO}/aarch64-hassio-supervisor"
     ;;
     *)
-        error "${ARCH} unknown!"
+        error "${ARCH} 未知!"
     ;;
 esac
 PREFIX=${PREFIX:-/usr}
@@ -118,7 +118,7 @@ EOF
 
 
 # Install Supervisor
-info "Install supervisor startup scripts"
+info "安装 Supervisor 启动脚本"
 sed -i "s,%%HASSIO_CONFIG%%,${CONFIG},g" "${PREFIX}"/sbin/hassio-supervisor
 sed -i -e "s,%%BINARY_DOCKER%%,${BINARY_DOCKER},g" \
        -e "s,%%SERVICE_DOCKER%%,${SERVICE_DOCKER},g" \
@@ -129,7 +129,7 @@ chmod a+x "${PREFIX}/sbin/hassio-supervisor"
 systemctl enable hassio-supervisor.service > /dev/null 2>&1;
 
 # Install AppArmor
-info "Install AppArmor scripts"
+info "安装 AppArmor 脚本"
 mkdir -p "${DATA_SHARE}/apparmor"
 curl -sL ${URL_APPARMOR_PROFILE} > "${DATA_SHARE}/apparmor/hassio-supervisor"
 sed -i "s,%%HASSIO_CONFIG%%,${CONFIG},g" "${PREFIX}/sbin/hassio-apparmor"
@@ -142,18 +142,18 @@ systemctl enable hassio-apparmor.service > /dev/null 2>&1;
 systemctl start hassio-apparmor.service
 
 # Start Supervisor
-info "Start Home Assistant Supervised"
+info "启动 Home Assistant Supervised"
 systemctl start hassio-supervisor.service
 
 # Install HA CLI
-info "Installing the 'ha' cli"
+info "安装 ha 命令行界面"
 chmod a+x "${PREFIX}/bin/ha"
 
 # Switch to cgroup v1
 if [ -f /etc/default/grub ]
 then
     if ! grep -q "systemd.unified_cgroup_hierarchy=false" /etc/default/grub; then
-        info "Switching to cgroup v1"
+        info "切换到 cgroup v1"
         cp /etc/default/grub /etc/default/grub.bak
         sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="/&systemd.unified_cgroup_hierarchy=false /' /etc/default/grub
         update-grub
@@ -162,17 +162,17 @@ then
 elif [ -f /boot/firmware/cmdline.txt ]
 then
     if ! grep -q "systemd.unified_cgroup_hierarchy=false" /boot/firmware/cmdline.txt; then
-        info "Switching to cgroup v1"
+        info "切换到 cgroup v1"
         sed -i.bak 's/$/ systemd.unified_cgroup_hierarchy=false/' /boot/firmware/cmdline.txt
         touch /var/run/reboot-required
     fi
 else
-    warn "Could not find /etc/default/grub or /boot/firmware/cmdline.txt failed to switch to cgroup v1"
+    warn "无法找到 /etc/default/grub 或 /boot/firmware/cmdline.txt，无法切换到 cgroup v1"
 fi
-info "Within a few minutes you will be able to reach Home Assistant at:"
-info "http://homeassistant.local:8123 or using the IP address of your"
-info "machine: http://${IP_ADDRESS}:8123"
+info "在几分钟内，您将能够访问 Home Assistant，网址为："
+info "http://homeassistant.local:8123 或使用您的 IP 地址"
+info "机器的 IP 地址为: http://${IP_ADDRESS}:8123"
 if [ -f /var/run/reboot-required ]
 then
-    warn "A reboot is required to apply changes to grub."
+    warn "需要重新启动系统以应用对 grub 的更改"
 fi
