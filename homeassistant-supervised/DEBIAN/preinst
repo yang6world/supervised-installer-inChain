@@ -13,8 +13,8 @@ warn ""
 
 # Check if we are running on a supported OS
 BYPASS_OS_CHECK=${BYPASS_OS_CHECK:-false}
-supported_os=("Debian GNU/Linux 11 (bullseye)" "Debian GNU/Linux 12 (bookworm)")
-armbian_os=("Armbian")
+supported_os=("Debian GNU/Linux 11 (bullseye)" "Debian GNU/Linux 12 (bookworm)" "Armbian 23.08.0-trunk bookworm")
+armbian_os=("Armbian 23.08.0-trunk bookworm")
 CURRENT_OS=$(lsb_release -d | awk -F"\t" '{print $2}')
 os_supported=false
 
@@ -42,6 +42,8 @@ for os in "${armbian_os[@]}"; do
         sed -i '$d' /boot/uEnv.txt
         echo "APPEND=root=UUID=72bbe4f4-d298-43f8-a0e4-8b0709b2a873 rootflags=data=writeback rw rootfstype=ext4 console=ttyAML0,115200n8 console=tty0 no_console_suspend consoleblank=0 fsck.fix=yes fsck.repair=yes net.ifnames=0 max_loop=128 cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory swapaccount=1 apparmor=1 security=apparmor systemd.unified_cgroup_hierarchy=false" >> /boot/uEnv.txt
         warn "正在对os-release进行操作"
+        sed -i '1d' /etc/os-release
+        sed -i '1 i\PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"' /etc/os-release
         break
     fi
 done
