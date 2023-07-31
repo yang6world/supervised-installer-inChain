@@ -34,19 +34,6 @@ if [[ $os_supported == false ]]; then
     warn "请不要报告与此操作系统相关的问题！"
 fi
 
-for os in "${armbian_os[@]}"; do
-    if [[ $os == "$CURRENT_OS" ]]; then
-        warn "正在对uEnv进行操作"
-        warn "正在备份原有的uEvn"
-        cp /boot/uEnv.txt /boot/uEnv.bak
-        echo "apparmor=1 security=apparmor systemd.unified_cgroup_hierarchy=false" >> /boot/uEnv.txt
-        sed '4{N;s/\n/ /;}' /boot/uEnv.txt > /boot/temp && mv /boot/temp /boot/uEnv.txt
-        warn "正在对os-release进行操作"
-        sed -i '1d' /etc/os-release
-        sed -i '1 i\PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"' /etc/os-release
-        break
-    fi
-done
 
 # Check if we are running on a supported architecture
 ARCH=$(uname -m)
